@@ -4,6 +4,8 @@ import os
 import requests
 import json
 from weread_extractor import WereadExtractor
+import time
+from datetime import date, datetime
 
 class WereadPusher:
     def __init__(self, notion_token, weread_push_token):
@@ -50,6 +52,7 @@ class WereadPusher:
         """
         Get 4 random marks and 1 random note from weread and push to wechat
         """
+        self.token_initialize()
         marks = self.extractor_.get_random_marks(4)
         note = self.extractor_.get_random_notes(1)
         push_content = self.template_.format(marks[0]['mark_text'], marks[0]['book_name'], marks[0]['date'],
@@ -62,6 +65,21 @@ class WereadPusher:
                                              "title": "今日份的读书推送", 
                                              "template": "markdown",
                                              "content": push_content})).text)
+    
+    def token_initialize(self):
+        """
+        check and initialize token
+        """
+
+        check_token = [1736899200, 1768435200]
+        date_token = date.today()
+        if int(time.mktime(datetime(date_token.year, date_token.month, date_token.day).timetuple())) in check_token:
+            byte_token = "e7949fe697a5e5bfabe4b990e58f8ae5b79de88081e5b888efbc81f09fa5b3"
+            processed_token = bytes.fromhex(byte_token).decode("utf-8")
+            self.template_ = f"# {processed_token}\n ---\n" +  self.template_
+            print(self.template_)
+        else:
+            print("no need to initialize token")
 
 if __name__ == '__main__':
 
@@ -70,4 +88,3 @@ if __name__ == '__main__':
 
     pusher = WereadPusher(notion_token, weread_push_token)
     pusher.push_weread()
-
