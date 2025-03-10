@@ -28,6 +28,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: weread push sync
-        run: |
-          python -u src/weread_push.py
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 3
+          retry_wait_seconds: 15
+          command: python -u src/weread_push.py
       
