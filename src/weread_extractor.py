@@ -8,10 +8,10 @@ class WereadExtractor:
         self.notion = Client(auth=token, log_level=logging.ERROR)
 
         # get the database id
-        self.book_database_id = self.get_database_id(self.notion.search(query="书架").get("results"))
-        self.mark_database_id = self.get_database_id(self.notion.search(query="划线").get("results"))
-        self.note_database_id = self.get_database_id(self.notion.search(query="笔记").get("results"))
-
+        self.book_database_id = self.get_database_id(self.notion.search(query="书架", filter={"property": "object", "value": "database"}).get("results"))
+        self.mark_database_id = self.get_database_id(self.notion.search(query="划线", filter={"property": "object", "value": "database"}).get("results"))
+        self.note_database_id = self.get_database_id(self.notion.search(query="笔记", filter={"property": "object", "value": "database"}).get("results"))
+        
         self.mark_cursors = list()
         self.note_cursors = list()
 
@@ -206,9 +206,3 @@ class WereadExtractor:
     
     def get_random_notes(self,n):
         return self.get_random_item(self.NOTE,n)
-
-if __name__ == '__main__':
-
-    token = "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"
-    bm_extractor = WereadExtractor(token)
-    print(bm_extractor.get_random_item(bm_extractor.NOTE,5))
