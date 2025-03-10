@@ -18,7 +18,7 @@ class WereadExtractor:
         self.MARK = 0
         self.NOTE = 1
 
-    def get_database_id(self,database_ret, title)):
+    def get_database_id(self,database_ret, title):
         """
         Check if the database id is valid.\n
         params:
