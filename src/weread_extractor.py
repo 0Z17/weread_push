@@ -8,9 +8,9 @@ class WereadExtractor:
         self.notion = Client(auth=token, log_level=logging.ERROR)
 
         # get the database id
-        self.book_database_id = self.get_database_id(self.notion.search(query="书架", filter={"property": "object", "value": "database"}).get("results"))
-        self.mark_database_id = self.get_database_id(self.notion.search(query="划线", filter={"property": "object", "value": "database"}).get("results"))
-        self.note_database_id = self.get_database_id(self.notion.search(query="笔记", filter={"property": "object", "value": "database"}).get("results"))
+        self.book_database_id = self.get_database_id(self.notion.search(query="书架", filter={"property": "object", "value": "database"}).get("results"), "书架")
+        self.mark_database_id = self.get_database_id(self.notion.search(query="划线", filter={"property": "object", "value": "database"}).get("results"), "划线")
+        self.note_database_id = self.get_database_id(self.notion.search(query="笔记", filter={"property": "object", "value": "database"}).get("results"), "笔记")
         
         self.mark_cursors = list()
         self.note_cursors = list()
@@ -18,7 +18,7 @@ class WereadExtractor:
         self.MARK = 0
         self.NOTE = 1
 
-    def get_database_id(self,database_ret):
+    def get_database_id(self,database_ret, title)):
         """
         Check if the database id is valid.\n
         params:
@@ -34,7 +34,7 @@ class WereadExtractor:
             return database_ret[0]["id"]
         
         for i in range(len(database_ret)):
-            if database_ret[i]["object"] == "database":
+            if database_ret[i]["title"][0]["plain_text"] == title:
                 return database_ret[i]["id"]
         
         print("Database not found.")
